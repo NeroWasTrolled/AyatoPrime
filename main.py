@@ -6,9 +6,10 @@ from datetime import datetime
 from custom_events import gerenciador_de_eventos
 from qte import QuickTimeEvent
 from button_qte import ButtonQTE
+from escolhas import setup as setup_enquete
 
-id_do_servidor = '1016374201663365290'
-lucky_user_id = ''
+id_do_servidor = '1209953492165328907'
+lucky_user_id = '548661080268996609'
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -26,12 +27,8 @@ blocked_channels = set()
 @bot.event
 async def on_ready():
     print(f'Bot está pronto como {bot.user}')
-    try:
-        synced = await bot.tree.sync(guild=discord.Object(id=id_do_servidor))
-        print(f"Sincronizado {len(synced)} comando(s)")
-    except Exception as e:
-        print(e)
-    verificar_tempo_de_evento.start()
+    await setup_enquete(bot)  
+    print("Cogs carregadas")
 
 @bot.event
 async def on_message(message):

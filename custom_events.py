@@ -22,14 +22,21 @@ class GerenciadorDeEventos:
         return True
 
     def ativar_evento_para_usuario(self, user_id):
+        eventos_possiveis = ['adrenaline_meter', 'rage_meter']
+        evento_escolhido = random.choice(eventos_possiveis)
+        duracao_evento = timedelta(minutes=2)  # Duração reduzida para 2 minutos
+
         self.usuarios_em_evento[user_id] = {
-            'evento': random.choice(['adrenaline_meter', 'rage_meter']),
+            'evento': evento_escolhido,
             'hora_inicio': datetime.utcnow(),
-            'hora_fim': datetime.utcnow() + timedelta(minutes=5)
+            'hora_fim': datetime.utcnow() + duracao_evento
         }
 
+        # Definir cooldown baseado na duração do evento
+        self.cooldowns_de_evento[user_id] = datetime.utcnow() + timedelta(minutes=random.randint(30, 60))
+
     def desativar_evento_para_usuario(self, user_id):
-        self.cooldowns_de_evento[user_id] = datetime.utcnow() + timedelta(minutes=30)
+        # Apenas remove o evento do usuário, o cooldown já é gerenciado na ativação
         if user_id in self.usuarios_em_evento:
             del self.usuarios_em_evento[user_id]
 
